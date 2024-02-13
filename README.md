@@ -6,9 +6,9 @@ Weather Dashboard is a web based application which displays the 5-day weather co
 
 ## User Story
 
-AS A traveler
-I WANT to see the weather outlook for multiple cities
-SO THAT I can plan a trip accordingly
+AS A traveler \n
+I WANT to see the weather outlook for multiple cities \n
+SO THAT I can plan a trip accordingly \n
 
 ## Usage
 
