@@ -5,33 +5,52 @@ const currentWeatherDiv = document.getElementById('currentWeather');
 const forecastDiv = document.getElementById('forecast');
 const historyList = document.getElementById('historyList');
 
-function getWeatherData(city) {
+function fetchWeatherData(lat, lon) {
+  const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-const apiUrl = ' https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apiKey}';
+  // Make a GET request to fetch current weather
+  fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch current weather');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log(data);
 
-// Make a GET request to fetch current weather
-fetch(apiUrl)
-.then(response => {
-  if (!response.ok) {
-    throw new Error('Failed to fetch current weather');
-  }
-  return response.json();
-})
-.then(data => {
-  updateCurrentWeather(data);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  
+  
+    }
+  
 
-    // After fetching data, update the UI
-    // Update current weather and forecast sections
-    updateCurrentWeather(city);
-    updateForecast(city);
 
-    // Add city to search history
-    addToHistory(city);
-  }
+function getLatLon(city) {
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+  // Make a GET request to fetch current weather
+  fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch current weather');
+    }
+    return response.json();
+  })
+  .then(data => {
+    const lat = data.coord.lat;
+    const lon = data.coord.lon;
+    fetchWeatherData(lat, lon);
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
 
 // add event listner for submit event
 searchForm.addEventListener('submit', function (event) {
@@ -40,8 +59,13 @@ searchForm.addEventListener('submit', function (event) {
     event.preventDefault();
     const city = cityInput.value;
 
-    // Call API to get weather data
-    getWeatherData(city);
+    if(city === '' || city === null) {
+      alert('Please enter a city');
+      return;
+    }
+
+     // Call API to get weather data
+     getLatLon(city);
 
     // Clear input field
     cityInput.value = '';
